@@ -9,56 +9,70 @@ var randomNumber = function(min,max) {
 //var pickedEnemyObj.name = "Roberto";
 
 
-
+var fightOrSkip = function() {
+    // ask user if they'd like to fight or skip using  function
+    var promptFight = window.prompt('Would you like FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+    
+    // Enter the conditional recursive function call here!
+    if (promptFight === "" || promptFight === null) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+    // if user picks "skip" confirm and then stop the loop
+    promptFight = promptFight.toLowerCase();
+    if (promptFight === "skip" || promptFight === "SKIP") {
+      // confirm user wants to skip
+      var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+  
+      // if yes (true), leave fight
+      if (confirmSkip) {
+        window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+        // subtract money from playerMoney for skipping
+        playerInfo.playerMoney = playerInfo.money - 10;
+        shop();
+        return true;
+      }
+    }
+  }
 
 var fight = function(pickedEnemyObj){
     
     
     while(pickedEnemyObj.health>0 && playerInfo.health > 0){
-        var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-        if (promptFight == "FIGHT" || promptFight == "fight"){
-            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+        
+        
+        if (fightOrSkip()){
+            break;
+        }
+        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
-            pickedEnemyObj.health = Math.max(0, pickedEnemyObj.health - damage);
+        pickedEnemyObj.health = Math.max(0, pickedEnemyObj.health - damage);
             
-            console.log(playerInfo.name + ' attacked ' + pickedEnemyObj.name + ' . ' + pickedEnemyObj.name + ' now has ' + pickedEnemyObj.health + ' health remaining');
+        console.log(playerInfo.name + ' attacked ' + pickedEnemyObj.name + ' . ' + pickedEnemyObj.name + ' now has ' + pickedEnemyObj.health + ' health remaining');
  
-            if (pickedEnemyObj.health <= 0){
+        if (pickedEnemyObj.health <= 0){
                 window.alert('Enemy has died');
                 playerInfo.money += 10;
                 break;
-            }
-            else{
+        }
+        else{
                 window.alert(pickedEnemyObj.name + " still has " + pickedEnemyObj.health + " health left.");
-            }
+        }
 
-            var damage = randomNumber(pickedEnemyObj.attack - 3, pickedEnemyObj.attack);
+        var damage = randomNumber(pickedEnemyObj.attack - 3, pickedEnemyObj.attack);
 
-            playerInfo.health = Math.max(0, playerInfo.health - damage);
-            console.log(pickedEnemyObj.name + ' attacked ' + playerInfo.name + ' . ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining');
+        playerInfo.health = Math.max(0, playerInfo.health - damage);
+        console.log(pickedEnemyObj.name + ' attacked ' + playerInfo.name + ' . ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining');
 
-            if (playerInfo.health <= 0){
+        if (playerInfo.health <= 0){
                 window.alert(playerInfo.name + 'has died, Game Over!!');
                 break;
-            }
+        }
 
-            else{
+        else{
                 window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.")
-            }  
-       } else if(promptFight == "SKIP" || promptFight == "skip"){
-              var promptAgain = window.confirm("Are you sure you want to quit?");
-              if (promptAgain){
-                   playerInfo.money = Math.max(0, playerInfo.money - 2);
-                   window.alert(playerInfo.name + " has chosen to skip the fight!");
-                   break;
-               }
-              else{
-
-                    fight(pickedEnemyObj);
-                }
-       } else{
-              window.alert("You need to pick a valid option. Try again!");
-       } 
+        }  
+       
     }
 };
 
